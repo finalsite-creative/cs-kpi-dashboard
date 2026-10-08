@@ -1533,7 +1533,7 @@ function renderCharts() {
     .sort((a,b)=>((b.chat||0)+(b.code||0)+(b.cowork||0))-((a.chat||0)+(a.code||0)+(a.cowork||0)))
     .slice(0,10);
 
-  const personLabels = activePeople.map(p=>p.name.split(" ")[0]);
+  const personLabels = activePeople.map(p=>{const t=p.name.split(" ");return t[0]+" "+(t[t.length-1][0]||"")+".";});
   dc("c_usageByPerson");
   const usageCanvas = document.getElementById("c_usageByPerson");
   if(usageCanvas) {
@@ -1542,16 +1542,16 @@ function renderCharts() {
       data:{
         labels: personLabels,
         datasets:[
-          {label:"Chat",        data:activePeople.map(p=>p.chat||0),   backgroundColor:"var(--purple)", borderRadius:3, stack:"a"},
-          {label:"Claude Code", data:activePeople.map(p=>p.code||0),   backgroundColor:"#0EA5E9",        borderRadius:0, stack:"a"},
-          {label:"Cowork",      data:activePeople.map(p=>p.cowork||0), backgroundColor:"var(--teal)",    borderRadius:3, stack:"a"},
+          {label:"Chat",        data:activePeople.map(p=>p.chat||0),   backgroundColor:"#6366F1", borderRadius:0, stack:"a"},
+          {label:"Claude Code", data:activePeople.map(p=>p.code||0),   backgroundColor:"#0EA5E9", borderRadius:0, stack:"a"},
+          {label:"Cowork",      data:activePeople.map(p=>p.cowork||0), backgroundColor:"#00B89C", borderRadius:0, stack:"a"},
         ]
       },
       options:{
         ...BASE,
         scales:{
-          x:{...BASE.scales.x, ticks:{...BASE.scales.x.ticks, maxRotation:45, minRotation:30}},
-          y:{...BASE.scales.y}
+          x:{...BASE.scales.x, stacked:true, ticks:{...BASE.scales.x.ticks, maxRotation:45, minRotation:30}},
+          y:{...BASE.scales.y, stacked:true}
         }
       }
     });
